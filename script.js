@@ -1,4 +1,74 @@
 let currentImageElement = null;
+let selectedElement = null;
+
+// Listener global de teclas: mueve el elemento seleccionado con las flechas del teclado
+document.addEventListener('keydown', function(e) {
+  if (selectedElement) {
+    const step = 5; // píxeles de movimiento por pulsación
+    let left = parseInt(selectedElement.style.left, 10) || 0;
+    let top = parseInt(selectedElement.style.top, 10) || 0;
+    if (e.key === 'ArrowLeft') {
+      selectedElement.style.left = (left - step) + 'px';
+    } else if (e.key === 'ArrowRight') {
+      selectedElement.style.left = (left + step) + 'px';
+    } else if (e.key === 'ArrowUp') {
+      selectedElement.style.top = (top - step) + 'px';
+    } else if (e.key === 'ArrowDown') {
+      selectedElement.style.top = (top + step) + 'px';
+    }
+  }
+});
+
+// Función para seleccionar un elemento: le agrega una clase "selected" y, si es texto, le pone el handle de redimensionado
+function selectElement(elem) {
+  // Quitar selección previa
+  if (selectedElement) {
+    selectedElement.classList.remove('selected');
+    // Eliminar el handle si existe
+    const existingHandle = selectedElement.querySelector('.resize-handle');
+    if (existingHandle) {
+      existingHandle.remove();
+    }
+  }
+  selectedElement = elem;
+  selectedElement.classList.add('selected');
+  // Si el elemento es de texto, agregar el handle para redimensionar
+  if (['H1', 'H2', 'P'].includes(selectedElement.tagName)) {
+    createResizeHandle(selectedElement);
+  }
+}
+
+// Función para crear un handle de redimensionado en el elemento seleccionado (solo textos)
+function createResizeHandle(elem) {
+  // Si ya existe, no se vuelve a crear
+  if (elem.querySelector('.resize-handle')) return;
+  
+  const handle = document.createElement('div');
+  handle.classList.add('resize-handle');
+  elem.appendChild(handle);
+  
+  // Al presionar el handle se inicia el proceso de redimensionar (ajustando el tamaño de la fuente)
+  handle.addEventListener('mousedown', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const startX = e.clientX;
+    const styleFontSize = window.getComputedStyle(elem).fontSize;
+    const originalFontSize = parseInt(styleFontSize, 10) || 24;
+    
+    function onMouseMove(eMove) {
+      const dx = eMove.clientX - startX;
+      let newFontSize = originalFontSize + dx;
+      if (newFontSize < 10) newFontSize = 10; // tamaño mínimo
+      elem.style.fontSize = newFontSize + 'px';
+    }
+    function onMouseUp() {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+}
 
 // Función para agregar texto con las opciones seleccionadas
 function addText() {
@@ -26,6 +96,12 @@ function addText() {
   textElem.addEventListener('dragstart', dragStart);
   textElem.addEventListener('dragend', dragEnd);
 
+  // Al hacer clic sobre el texto se selecciona para mover/redimensionar
+  textElem.addEventListener('click', function(e) {
+    e.stopPropagation();
+    selectElement(textElem);
+  });
+
   document.getElementById('workspace').appendChild(textElem);
   document.getElementById('textContent').value = '';
 }
@@ -48,8 +124,10 @@ function addImage() {
     img.style.cursor = 'pointer';
     img.classList.add('element');
 
-    // Al hacer clic en la imagen se abre el modal de edición
-    img.addEventListener('click', function() {
+    // Al hacer clic en la imagen se selecciona y se abre el modal de edición
+    img.addEventListener('click', function(e) {
+      e.stopPropagation();
+      selectElement(img);
       currentImageElement = img;
       openImageModal();
     });
@@ -94,6 +172,12 @@ function addButton() {
   btn.addEventListener('dragstart', dragStart);
   btn.addEventListener('dragend', dragEnd);
 
+  // Al hacer clic, se selecciona el botón
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    selectElement(btn);
+  });
+
   document.getElementById('workspace').appendChild(btn);
 }
 
@@ -112,6 +196,13 @@ function addNotebook() {
   notebook.setAttribute('draggable', true);
   notebook.addEventListener('dragstart', dragStart);
   notebook.addEventListener('dragend', dragEnd);
+
+  // Al hacer clic, se selecciona el cuaderno
+  notebook.addEventListener('click', function(e) {
+    e.stopPropagation();
+    selectElement(notebook);
+  });
+
   document.getElementById('workspace').appendChild(notebook);
 }
 
@@ -158,8 +249,8 @@ function generateCode() {
   <script src="script.js"><\/script>
 </body>
 </html>`;
-  // Se obtienen el CSS y JS actuales (en un proyecto real podrías generar archivos separados)
-  const cssCode = document.querySelector('link[rel="stylesheet"]').sheet.ownerNode ? document.querySelector('link[rel="stylesheet"]').sheet.ownerNode.textContent : "";
+  const cssCode = document.querySelector('link[rel="stylesheet"]').sheet.ownerNode ?
+    document.querySelector('link[rel="stylesheet"]').sheet.ownerNode.textContent : "";
   const jsCode = document.querySelector('script[src="script.js"]') ? "Revisa el archivo script.js" : "";
 
   document.getElementById('codeHtml').innerText = htmlCode;
@@ -171,3 +262,13 @@ function generateCode() {
 function closeCodeModal() {
   document.getElementById('codeModal').classList.add('hidden');
 }
+
+// Evento para deseleccionar el elemento si se hace clic en el fondo del workspace
+document.getElementById('workspace').addEventListener('click', function(e) {
+  if (e.target.id === 'workspace') {
+    if (selectedElement) {
+      selectedElement.classList.remove('selected');
+      selectedElement = null;
+    }
+  }
+});
