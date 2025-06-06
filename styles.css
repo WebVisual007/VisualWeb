@@ -1,49 +1,65 @@
 /* Estilos generales */
 body {
   margin: 0;
-  font-family: sans-serif;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+  font-family: 'Roboto', sans-serif;
+  background: #f5f7fa;
 }
 
 header {
-  padding: 10px;
-  background: #333;
-  color: white;
+  background: #4a90e2;
+  color: #fff;
   text-align: center;
+  padding: 15px 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
 main {
-  flex: 1;
   display: flex;
-  overflow: hidden;
+  padding: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #ececec 100%);
 }
 
+/* Sidebar (Toolbox) */
 aside#toolbox {
-  width: 300px;
-  background: #f4f4f4;
-  padding: 10px;
+  flex: 0 0 300px;
+  background: #fff;
+  margin-right: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
-  border-right: 1px solid #ccc;
+  border: 1px solid #e0e0e0;
 }
 
+/* Encabezados de la barra lateral */
+aside#toolbox h2 {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Área de trabajo */
 #workspace {
   flex: 1;
-  border: 1px dashed #ccc;
-  margin: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: auto;
-  background: #fff;
+  padding: 10px;
 }
 
-/* Cada elemento agregado al espacio */
+/* Elementos agregados en el espacio */
 .element {
-  position: absolute;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  padding: 8px 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   cursor: move;
-  border: 1px solid #ddd;
-  padding: 5px;
-  background: rgba(255, 255, 255, 0.8);
 }
 
 /* Botón fijo para generar código */
@@ -51,28 +67,28 @@ aside#toolbox {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: yellow;
-  color: black;
+  background: #ffcc00;
+  color: #333;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
   cursor: pointer;
   z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease-in-out;
 }
 
-/* Paneles adicionales en la sidebar */
+#generateCodeBtn:hover {
+  background: #ffdb4d;
+}
+
+/* Paneles adicionales en la barra lateral */
 .control-panel {
   margin-top: 20px;
-  border-top: 1px solid #ccc;
   padding-top: 10px;
-}
-
-.control-panel h2 {
-  margin-bottom: 5px;
-}
-
-.hidden {
-  display: none;
+  border-top: 1px solid #eee;
 }
 
 /* Estilos para el cuaderno */
@@ -81,6 +97,7 @@ aside#toolbox {
   border: 2px solid #666;
   padding: 20px;
   background: #fafafa;
+  border-radius: 4px;
 }
 
 .notebook.circular {
@@ -93,28 +110,31 @@ aside#toolbox {
   border: none;
   cursor: move;
   margin: 5px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos de los modales */
+/* Estilos para los modales */
 #imageModal,
 #codeModal {
   position: fixed;
-  background: white;
-  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 8px;
   padding: 20px;
   z-index: 1001;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 #imageModal {
   top: 20%;
-  left: 30%;
-  width: 300px;
+  left: 40%;
+  width: 320px;
 }
 
 #codeModal {
-  top: 10%;
-  left: 10%;
-  width: 80%;
-  height: 80%;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
   overflow: auto;
 }
