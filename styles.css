@@ -1,0 +1,120 @@
+/* Estilos generales */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+header {
+  padding: 10px;
+  background: #333;
+  color: white;
+  text-align: center;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+aside#toolbox {
+  width: 300px;
+  background: #f4f4f4;
+  padding: 10px;
+  overflow-y: auto;
+  border-right: 1px solid #ccc;
+}
+
+#workspace {
+  flex: 1;
+  border: 1px dashed #ccc;
+  margin: 10px;
+  position: relative;
+  overflow: auto;
+  background: #fff;
+}
+
+/* Cada elemento agregado al espacio */
+.element {
+  position: absolute;
+  cursor: move;
+  border: 1px solid #ddd;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Botón fijo para generar código */
+#generateCodeBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: yellow;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* Paneles adicionales en la sidebar */
+.control-panel {
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+}
+
+.control-panel h2 {
+  margin-bottom: 5px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Estilos para el cuaderno */
+.notebook {
+  margin: 10px;
+  border: 2px solid #666;
+  padding: 20px;
+  background: #fafafa;
+}
+
+.notebook.circular {
+  border-radius: 50%;
+}
+
+/* Botón personalizado */
+.custom-button {
+  padding: 10px 15px;
+  border: none;
+  cursor: move;
+  margin: 5px;
+}
+
+/* Estilos de los modales */
+#imageModal,
+#codeModal {
+  position: fixed;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  z-index: 1001;
+}
+
+#imageModal {
+  top: 20%;
+  left: 30%;
+  width: 300px;
+}
+
+#codeModal {
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  overflow: auto;
+}
