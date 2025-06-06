@@ -1,3 +1,9 @@
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById('codeModal').classList.add('hidden');
+});
+
+
+
 let currentImageElement = null;
 let selectedElement = null;
 
