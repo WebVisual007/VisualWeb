@@ -1,9 +1,15 @@
-// Asegurar que el modal esté oculto al cargar la página
+// Asegurar que los modales estén ocultos al cargar la página
 document.addEventListener("DOMContentLoaded", function() {
   const codeModal = document.getElementById('codeModal');
   if (codeModal) {
     codeModal.classList.add('hidden');
-    codeModal.style.display = "none"; // Oculta el modal completamente
+    codeModal.style.display = "none";
+  }
+
+  const imageModal = document.getElementById('imageModal');
+  if (imageModal) {
+    imageModal.classList.add('hidden');
+    imageModal.style.display = "none";
   }
 });
 
@@ -28,7 +34,141 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// Función para abrir el modal al generar código
+// Función para seleccionar un elemento y darle estilo de selección
+function selectElement(elem) {
+  if (selectedElement) {
+    selectedElement.classList.remove('selected');
+    const existingHandle = selectedElement.querySelector('.resize-handle');
+    if (existingHandle) {
+      existingHandle.remove();
+    }
+  }
+  selectedElement = elem;
+  selectedElement.classList.add('selected');
+  if (['H1', 'H2', 'P'].includes(selectedElement.tagName)) {
+    createResizeHandle(selectedElement);
+  }
+}
+
+// Función para crear un handle de redimensionado en elementos de texto
+function createResizeHandle(elem) {
+  if (elem.querySelector('.resize-handle')) return;
+  const handle = document.createElement('div');
+  handle.classList.add('resize-handle');
+  elem.appendChild(handle);
+  
+  handle.addEventListener('mousedown', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    const startX = e.clientX;
+    const originalFontSize = parseInt(window.getComputedStyle(elem).fontSize, 10) || 24;
+    
+    function onMouseMove(eMove) {
+      const dx = eMove.clientX - startX;
+      let newFontSize = originalFontSize + dx;
+      if (newFontSize < 10) newFontSize = 10;
+      elem.style.fontSize = newFontSize + 'px';
+    }
+    function onMouseUp() {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+}
+
+// Función para agregar texto con las opciones seleccionadas
+function addText() {
+  const content = document.getElementById('textContent').value;
+  const type = document.getElementById('textType').value;
+  const font = document.getElementById('fontSelect').value;
+  const fontSize = document.getElementById('fontSize').value;
+  const color = document.getElementById('fontColor').value;
+
+  if (!content) {
+    alert('Por favor ingrese contenido de texto.');
+    return;
+  }
+  const textElem = document.createElement(type);
+  textElem.innerText = content;
+  textElem.style.position = 'absolute';
+  textElem.style.top = '10px';
+  textElem.style.left = '10px';
+  textElem.style.fontFamily = font;
+  textElem.style.fontSize = fontSize + 'px';
+  textElem.style.color = color;
+  textElem.classList.add('element');
+  textElem.setAttribute('draggable', true);
+  textElem.addEventListener('click', function(e) {
+    e.stopPropagation();
+    selectElement(textElem);
+  });
+
+  document.getElementById('workspace').appendChild(textElem);
+  document.getElementById('textContent').value = '';
+}
+
+// Función para agregar una imagen y abrir el modal de edición al hacer clic
+function addImage() {
+  const file = document.getElementById('imageInput').files[0];
+  if (!file) {
+    alert('Seleccione un archivo de imagen.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = document.createElement('img');
+    img.src = e.target.result;
+    img.style.position = 'absolute';
+    img.style.top = '50px';
+    img.style.left = '50px';
+    img.style.width = '200px';
+    img.style.cursor = 'pointer';
+    img.classList.add('element');
+    img.addEventListener('click', function(e) {
+      e.stopPropagation();
+      selectElement(img);
+      currentImageElement = img;
+      openImageModal();
+    });
+
+    document.getElementById('workspace').appendChild(img);
+  }
+  reader.readAsDataURL(file);
+}
+
+// Función para abrir el modal de edición de imagen
+function openImageModal() {
+  const imageModal = document.getElementById('imageModal');
+  if (imageModal) {
+    imageModal.classList.remove('hidden');
+    imageModal.style.display = "block"; 
+  }
+}
+
+// Función para cerrar el modal de edición de imagen
+function closeImageModal() {
+  const imageModal = document.getElementById('imageModal');
+  if (imageModal) {
+    imageModal.classList.add('hidden');
+    imageModal.style.display = "none"; 
+  }
+}
+
+// Función para aplicar cambios a la imagen
+function applyImageEdits() {
+  if (currentImageElement) {
+    const scale = document.getElementById('imgScale').value;
+    const rotate = document.getElementById('imgRotate').value;
+    const filter = document.getElementById('imgFilter').value;
+    currentImageElement.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+    currentImageElement.style.filter = filter;
+    closeImageModal();
+  }
+}
+
+// Función para abrir el modal de código generado
 function generateCode() {
   const workspaceContent = document.getElementById('workspace').innerHTML;
   const htmlCode = `<!DOCTYPE html>
@@ -42,26 +182,24 @@ function generateCode() {
   <script src="script.js"><\/script>
 </body>
 </html>`;
-  const cssCode = document.querySelector('link[rel="stylesheet"]').sheet.ownerNode ?
-    document.querySelector('link[rel="stylesheet"]').sheet.ownerNode.textContent : "";
-  const jsCode = document.querySelector('script[src="script.js"]') ? "Revisa el archivo script.js" : "";
-
   document.getElementById('codeHtml').innerText = htmlCode;
-  document.getElementById('codeCss').innerText = cssCode;
-  document.getElementById('codeJs').innerText = jsCode;
-
-  const codeModal = document.getElementById('codeModal');
-  if (codeModal) {
-    codeModal.classList.remove('hidden');
-    codeModal.style.display = "block"; // Asegurar que el modal se muestre correctamente
-  }
+  document.getElementById('codeModal').classList.remove('hidden');
+  document.getElementById('codeModal').style.display = "block"; 
 }
 
-// Función para cerrar el modal
+// Función para cerrar el modal de código generado
 function closeCodeModal() {
   const codeModal = document.getElementById('codeModal');
   if (codeModal) {
     codeModal.classList.add('hidden');
-    codeModal.style.display = "none"; // Asegurar que el modal se oculte completamente
+    codeModal.style.display = "none"; 
   }
 }
+
+// Evento para deseleccionar elementos en el workspace
+document.getElementById('workspace').addEventListener('click', function(e) {
+  if (e.target.id === 'workspace' && selectedElement) {
+    selectedElement.classList.remove('selected');
+    selectedElement = null;
+  }
+});
