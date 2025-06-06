@@ -138,3 +138,21 @@ aside#toolbox h2 {
   height: 90%;
   overflow: auto;
 }
+
+/* Estilo para el elemento seleccionado */
+.selected {
+  border: 2px dashed #4a90e2;
+  position: relative; /* Para posicionar correctamente al handle */
+}
+
+/* Handle para redimensionar */
+.resize-handle {
+  width: 10px;
+  height: 10px;
+  background: #4a90e2;
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  cursor: se-resize;
+}
+
