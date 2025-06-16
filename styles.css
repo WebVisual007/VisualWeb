@@ -1,7 +1,7 @@
-/* reset básico */
+/* reset */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* LAYOUT */
+/* layout */
 body, html { height: 100%; font-family: 'Roboto', sans-serif; }
 #builder { display: flex; height: 100%; }
 #toolbar {
@@ -17,32 +17,33 @@ body, html { height: 100%; font-family: 'Roboto', sans-serif; }
   overflow: hidden; padding: 1rem;
 }
 #canvas {
-  width: 100%; height: 100%; position: relative;
+  position: relative; width: 100%; height: 100%;
 }
 
-/* VISTAS RESPONSIVE */
+/* vista desktop/mobile (se aplican inline desde JS) */
 #viewControls {
   position: absolute; top: 10px; right: 10px;
 }
 #viewControls button { margin-left: .5rem; }
 
-/* ELEMENTOS EDITABLES */
+/* elementos editables */
 .canvas-element {
-  position: absolute; border: 1px dashed transparent;
-  padding: .25rem; cursor: move;
+  position: absolute;
+  border: 1px dashed transparent;
+  padding: .25rem;
+  cursor: move;
   user-select: none;
 }
 .canvas-element.selected {
   border-color: #0078d4;
 }
 
-/* TEMAS */
+/* temas */
 .theme-default { background: #ffffff; }
 .theme-cocina { background: url('img/cocina.jpg') center/cover; }
 .theme-deporte { background: url('img/deporte.jpg') center/cover; }
 .theme-games { background: url('img/games.jpg') center/cover; }
 .theme-naturaleza { background: url('img/naturaleza.jpg') center/cover; }
-/* Cuaderno: fondo blanca + margen ancho blanco */
 .theme-cuaderno {
   background: #ddd;
 }
@@ -51,15 +52,15 @@ body, html { height: 100%; font-family: 'Roboto', sans-serif; }
   box-shadow: 0 0 0 20px #ddd;
 }
 
-/* MODAL DE CÓDIGO */
+/* modal código */
 #codeModal {
   position: fixed; inset: 0; background: rgba(0,0,0,.6);
   display: flex; justify-content: center; align-items: center;
 }
-#codeModal .code-tabs {
-  display: flex; margin-bottom: .5rem;
-}
-#codeModal button { cursor: pointer; }
+#codeModal.hidden { display: none !important; }
+.code-tabs { display: flex; margin-bottom: .5rem; }
+.code-tabs button { cursor: pointer; padding: .5rem; }
+.code-tabs .active { font-weight: bold; }
 .codePane {
   background: #1e1e1e; color: #fff; padding: 1rem;
   width: 80vw; height: 60vh; overflow: auto;
