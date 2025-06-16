@@ -1,179 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Constructor de Sitios Web</title>
-  <!-- Algunos Google Fonts de ejemplo (puedes incorporar más según lo necesites) -->
-  <link href="https://fonts.googleapis.com/css?family=Roboto|Open+Sans|Lato|Montserrat|Raleway" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador Web</title>
+  <link rel="stylesheet" href="estilo.css" />
 </head>
-<body>
+<body class="tema-blanco">
   <header>
     <h1>Constructor de Sitios Web</h1>
+    <select id="temaSelector">
+      <option value="blanco">Tema Blanco</option>
+      <option value="cocina">Cocina</option>
+      <option value="deportes">Deportes</option>
+      <option value="videojuegos">Games</option>
+      <option value="naturaleza">Naturaleza</option>
+      <option value="cuaderno">Cuaderno</option>
+    </select>
+    <select id="fuenteSelector"></select>
   </header>
-  <main>
-    <aside id="toolbox">
-      <!-- Herramienta para agregar texto -->
-      <div id="textTool">
-        <h2>Texto</h2>
-        <input type="text" id="textContent" placeholder="Contenido del texto">
-        <br>
-        <select id="textType">
-          <option value="h1">Título (H1)</option>
-          <option value="h2">Subtítulo (H2)</option>
-          <option value="p">Párrafo</option>
-        </select>
-        <br>
-        <label for="fontSelect">Fuente:</label>
-        <select id="fontSelect">
-          <!-- 50 opciones de fuentes -->
-          <option value="Arial">Arial</option>
-          <option value="Helvetica">Helvetica</option>
-          <option value="Times New Roman">Times New Roman</option>
-          <option value="Courier New">Courier New</option>
-          <option value="Verdana">Verdana</option>
-          <option value="Georgia">Georgia</option>
-          <option value="Palatino">Palatino</option>
-          <option value="Garamond">Garamond</option>
-          <option value="Bookman">Bookman</option>
-          <option value="Comic Sans MS">Comic Sans MS</option>
-          <option value="Impact">Impact</option>
-          <option value="Lucida Sans">Lucida Sans</option>
-          <option value="Tahoma">Tahoma</option>
-          <option value="Trebuchet MS">Trebuchet MS</option>
-          <option value="Lucida Console">Lucida Console</option>
-          <option value="Monaco">Monaco</option>
-          <option value="Calibri">Calibri</option>
-          <option value="Candara">Candara</option>
-          <option value="Consolas">Consolas</option>
-          <option value="Segoe UI">Segoe UI</option>
-          <option value="Franklin Gothic">Franklin Gothic</option>
-          <option value="Gill Sans">Gill Sans</option>
-          <option value="Century Gothic">Century Gothic</option>
-          <option value="Baskerville">Baskerville</option>
-          <option value="Didot">Didot</option>
-          <option value="Rockwell">Rockwell</option>
-          <option value="Arial Black">Arial Black</option>
-          <option value="Comic Neue">Comic Neue</option>
-          <option value="Open Sans">Open Sans</option>
-          <option value="Roboto">Roboto</option>
-          <option value="Lato">Lato</option>
-          <option value="Montserrat">Montserrat</option>
-          <option value="Raleway">Raleway</option>
-          <option value="Oswald">Oswald</option>
-          <option value="Merriweather">Merriweather</option>
-          <option value="PT Sans">PT Sans</option>
-          <option value="Source Sans Pro">Source Sans Pro</option>
-          <option value="Ubuntu">Ubuntu</option>
-          <option value="Noto Sans">Noto Sans</option>
-          <option value="Merriweather Sans">Merriweather Sans</option>
-          <option value="Playfair Display">Playfair Display</option>
-          <option value="Droid Sans">Droid Sans</option>
-          <option value="Josefin Sans">Josefin Sans</option>
-          <option value="Anton">Anton</option>
-          <option value="Barber">Barber</option>
-          <option value="Bungee">Bungee</option>
-          <option value="Cormorant Garamond">Cormorant Garamond</option>
-          <option value="Dancing Script">Dancing Script</option>
-          <option value="Futura">Futura</option>
-          <option value="Franklin Gothic Medium">Franklin Gothic Medium</option>
-        </select>
-        <br>
-        <label for="fontSize">Tamaño:</label>
-        <input type="number" id="fontSize" value="24" style="width:60px;"> px
-        <br>
-        <label for="fontColor">Color:</label>
-        <input type="color" id="fontColor" value="#000000">
-        <br>
-        <button onclick="addText()">Agregar Texto</button>
-      </div>
 
-      <!-- Herramienta para agregar imágenes -->
-      <div id="imageTool" class="control-panel">
-        <h2>Imagen</h2>
-        <input type="file" id="imageInput" accept="image/*">
-        <br>
-        <button onclick="addImage()">Agregar Imagen</button>
-      </div>
-
-      <!-- Herramienta para agregar botones personalizados -->
-      <div id="buttonTool" class="control-panel">
-        <h2>Botón Personalizado</h2>
-        <input type="text" id="btnText" placeholder="Texto del botón">
-        <br>
-        <label for="btnColor">Color:</label>
-        <input type="color" id="btnColor" value="#008CBA">
-        <br>
-        <label for="btnWidth">Ancho:</label>
-        <input type="number" id="btnWidth" value="100" style="width:60px;"> px
-        <br>
-        <label for="btnHeight">Alto:</label>
-        <input type="number" id="btnHeight" value="40" style="width:60px;"> px
-        <br>
-        <label for="btnLink">Enlace:</label>
-        <input type="text" id="btnLink" placeholder="http://ejemplo.com">
-        <br>
-        <label for="btnAnimation">Animación (CSS):</label>
-        <input type="text" id="btnAnimation" placeholder="ej. bounce">
-        <br>
-        <button onclick="addButton()">Agregar Botón</button>
-      </div>
-
-      <!-- Herramienta para agregar el simulador de cuadernos -->
-      <div id="notebookTool" class="control-panel">
-        <h2>Simulador de Cuaderno</h2>
-        <label for="notebookType">Tipo:</label>
-        <select id="notebookType">
-          <option value="square">Cuadrado</option>
-          <option value="circular">Circular</option>
-        </select>
-        <br>
-        <button onclick="addNotebook()">Agregar Cuaderno</button>
-      </div>
-    </aside>
-    <section id="workspace">
-      <!-- Aquí se agregarán todos los elementos creados -->
-    </section>
+  <main id="zonaDiseño" contenteditable="true">
+    <p>Aquí empieza tu sitio web...</p>
   </main>
 
-  <!-- Botón fijo para generar código -->
-  <button id="generateCodeBtn" onclick="generateCode()">Generar Código</button>
+  <section id="herramientas">
+    <button onclick="agregarElemento('h1')">Agregar Título H1</button>
+    <button onclick="agregarElemento('h2')">Agregar H2</button>
+    <button onclick="agregarElemento('img')">Agregar Imagen</button>
+    <button onclick="agregarElemento('boton')">Botón + Subenlace</button>
+  </section>
 
-  <!-- Modal para editar imágenes -->
-  <div id="imageModal" class="hidden">
-    <h3>Editar Imagen</h3>
-    <label>Escala:</label>
-    <input type="range" id="imgScale" min="0.5" max="2" step="0.1" value="1"><br>
-    <label>Rotación:</label>
-    <input type="range" id="imgRotate" min="0" max="360" step="5" value="0"><br>
-    <label for="imgFilter">Filtro:</label>
-    <select id="imgFilter">
-      <option value="none">Ninguno</option>
-      <option value="grayscale(100%)">Escala de grises</option>
-      <option value="sepia(100%)">Sepia</option>
-      <option value="brightness(150%)">Brillo</option>
-      <option value="contrast(200%)">Contraste</option>
-    </select>
-    <br>
-    <button onclick="applyImageEdits()">Aplicar</button>
-    <button onclick="closeImageModal()">Cerrar</button>
-  </div>
+  <footer>
+    <button id="btnExportar">Generar Código</button>
+    <textarea id="codigoResultado" readonly></textarea>
+  </footer>
 
-  <!-- Modal para mostrar el código generado -->
-  <div id="codeModal" class="hidden">
-    <h3>Código Generado</h3>
-    <h4>HTML</h4>
-    <pre id="codeHtml"></pre>
-    <h4>CSS</h4>
-    <pre id="codeCss"></pre>
-    <h4>JavaScript</h4>
-    <pre id="codeJs"></pre>
-    <button onclick="closeCodeModal()">Cerrar</button>
-  </div>
-
-
- <script src="script.js"></script>
-  
+  <script src="script.js"></script>
 </body>
 </html>
