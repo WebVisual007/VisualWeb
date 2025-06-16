@@ -2,39 +2,83 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generador Web</title>
-  <link rel="stylesheet" href="estilo.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Web Builder</title>
+
+  <!-- 20 Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Open+Sans|Lato|Montserrat|Oswald|Raleway|PT+Sans|Merriweather|Nunito|Ubuntu|Playfair+Display|Source+Sans+Pro|Poppins|Fira+Sans|Inconsolata|Rubik|Work+Sans|Arvo|Kanit|Titillium+Web&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Librería para drag/resize/rotate -->
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 </head>
-<body class="tema-blanco">
-  <header>
-    <h1>Constructor de Sitios Web</h1>
-    <select id="temaSelector">
-      <option value="blanco">Tema Blanco</option>
-      <option value="cocina">Cocina</option>
-      <option value="deportes">Deportes</option>
-      <option value="videojuegos">Games</option>
-      <option value="naturaleza">Naturaleza</option>
-      <option value="cuaderno">Cuaderno</option>
-    </select>
-    <select id="fuenteSelector"></select>
-  </header>
+<body>
+  <div id="builder">
+    <!-- BARRA DE HERRAMIENTAS -->
+    <aside id="toolbar">
+      <h2>Herramientas</h2>
+      <section>
+        <label>Tema:</label>
+        <select id="themeSelect">
+          <option value="default">Blanco</option>
+          <option value="cocina">Cocina</option>
+          <option value="deporte">Deporte</option>
+          <option value="games">Games</option>
+          <option value="naturaleza">Naturaleza</option>
+          <option value="cuaderno">Cuaderno</option>
+        </select>
+      </section>
 
-  <main id="zonaDiseño" contenteditable="true">
-    <p>Aquí empieza tu sitio web...</p>
-  </main>
+      <section>
+        <label>Fuente:</label>
+        <select id="fontSelect">
+          <option value="">-- Automática --</option>
+          <option value="Roboto">Roboto</option>
+          <option value="Open Sans">Open Sans</option>
+          <option value="Lato">Lato</option>
+          <!-- ...otras fuentes hasta 20 -->
+        </select>
+      </section>
 
-  <section id="herramientas">
-    <button onclick="agregarElemento('h1')">Agregar Título H1</button>
-    <button onclick="agregarElemento('h2')">Agregar H2</button>
-    <button onclick="agregarElemento('img')">Agregar Imagen</button>
-    <button onclick="agregarElemento('boton')">Botón + Subenlace</button>
-  </section>
+      <section>
+        <button onclick="addElement('h1')">Agregar H1</button>
+        <button onclick="addElement('h2')">Agregar H2</button>
+        <button onclick="addElement('h3')">Agregar H3</button>
+        <button onclick="addElement('p')">Agregar Texto</button>
+        <button onclick="addElement('img')">Agregar Imagen</button>
+        <button onclick="addElement('video')">Agregar Video</button>
+        <button onclick="addElement('audio')">Agregar Música</button>
+        <button onclick="addElement('button')">Agregar Botón</button>
+      </section>
+    </aside>
 
-  <footer>
-    <button id="btnExportar">Generar Código</button>
-    <textarea id="codigoResultado" readonly></textarea>
-  </footer>
+    <!-- ÁREA DE CANVAS -->
+    <div id="canvas-container">
+      <div id="canvas" class="theme-default"></div>
+    </div>
+
+    <!-- CONTROLES DE VISTA -->
+    <div id="viewControls">
+      <button id="desktopView">Escritorio</button>
+      <button id="mobileView">Móvil</button>
+    </div>
+
+    <!-- BOTÓN DE GENERAR CÓDIGO -->
+    <button id="generateCode">Generar Código</button>
+  </div>
+
+  <!-- MODAL PARA MOSTRAR CÓDIGO -->
+  <div id="codeModal" class="hidden">
+    <div class="code-tabs">
+      <button data-tab="html" class="active">HTML</button>
+      <button data-tab="css">CSS</button>
+      <button data-tab="js">JS</button>
+    </div>
+    <pre id="htmlPane" class="codePane"></pre>
+    <pre id="cssPane" class="codePane hidden"></pre>
+    <pre id="jsPane" class="codePane hidden"></pre>
+    <button id="closeModal">Cerrar</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
