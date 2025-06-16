@@ -1,15 +1,24 @@
+// ====================
+// script.js modificado
+// ====================
+
 // Referencias DOM
-const canvas = document.getElementById('canvas');
-const themeSelect = document.getElementById('themeSelect');
-const fontSelect = document.getElementById('fontSelect');
-const desktopView = document.getElementById('desktopView');
-const mobileView = document.getElementById('mobileView');
+const canvas        = document.getElementById('canvas');
+const themeSelect   = document.getElementById('themeSelect');
+const fontSelect    = document.getElementById('fontSelect');
+const desktopView   = document.getElementById('desktopView');
+const mobileView    = document.getElementById('mobileView');
 const generateCodeBtn = document.getElementById('generateCode');
-const codeModal = document.getElementById('codeModal');
-const closeModal = document.getElementById('closeModal');
-const htmlPane = document.getElementById('htmlPane');
-const cssPane  = document.getElementById('cssPane');
-const jsPane   = document.getElementById('jsPane');
+const codeModal     = document.getElementById('codeModal');
+const closeModal    = document.getElementById('closeModal');
+const htmlPane      = document.getElementById('htmlPane');
+const cssPane       = document.getElementById('cssPane');
+const jsPane        = document.getElementById('jsPane');
+
+// FORZAR OCULTAR EL MODAL AL INICIO
+// (por si el HTML viene sin la clase .hidden o algo lo abre)
+codeModal.classList.add('hidden');
+codeModal.style.display = 'none';
 
 // CAMBIO DE TEMA
 themeSelect.addEventListener('change', e => {
@@ -23,10 +32,12 @@ fontSelect.addEventListener('change', e => {
 
 // VISTAS RESPONSIVE
 desktopView.addEventListener('click', () => {
-  canvas.style.width = '100%'; canvas.style.height = '100%';
+  canvas.style.width  = '100%';
+  canvas.style.height = '100%';
 });
 mobileView.addEventListener('click', () => {
-  canvas.style.width = '375px'; canvas.style.height = '667px';
+  canvas.style.width  = '375px';
+  canvas.style.height = '667px';
 });
 
 // AÑADIR ELEMENTOS
@@ -61,7 +72,8 @@ function addElement(type) {
   }
 
   el.classList.add('canvas-element');
-  el.style.top = '20px'; el.style.left = '20px';
+  el.style.top  = '20px';
+  el.style.left = '20px';
   canvas.appendChild(el);
   makeInteractable(el);
 }
@@ -70,12 +82,17 @@ function addElement(type) {
 function makeInteractable(el) {
   interact(el)
     .draggable({
-      modifiers: [ interact.modifiers.restrict({ restriction: canvas, elementRect: { top:0, left:0, bottom:1, right:1 } }) ],
+      modifiers: [
+        interact.modifiers.restrict({
+          restriction: canvas,
+          elementRect: { top:0, left:0, bottom:1, right:1 }
+        })
+      ],
       listeners: {
         move (event) {
           let x = (parseFloat(el.getAttribute('data-x')) || 0) + event.dx;
           let y = (parseFloat(el.getAttribute('data-y')) || 0) + event.dy;
-          el.style.transform = `translate(${x}px, ${y}px) rotate(${el.getAttribute('data-rotation') || 0}deg)`;
+          el.style.transform = `translate(${x}px,${y}px) rotate(${el.getAttribute('data-rotation')||0}deg)`;
           el.setAttribute('data-x', x);
           el.setAttribute('data-y', y);
         }
@@ -85,36 +102,41 @@ function makeInteractable(el) {
       listeners: {
         move(event) {
           let currentRot = parseFloat(el.getAttribute('data-rotation')) || 0;
-          let newRot = currentRot + event.da;
+          let newRot     = currentRot + event.da;
           el.setAttribute('data-rotation', newRot);
           let x = el.getAttribute('data-x') || 0;
           let y = el.getAttribute('data-y') || 0;
-          el.style.transform = `translate(${x}px, ${y}px) rotate(${newRot}deg)`;
+          el.style.transform = `translate(${x}px,${y}px) rotate(${newRot}deg)`;
         }
       }
     })
     .resizable({
       edges: { left:true, right:true, bottom:true, top:true },
-      modifiers: [ interact.modifiers.restrictSize({ min: { width: 20, height: 20 } }) ],
+      modifiers: [
+        interact.modifiers.restrictSize({ min: { width: 20, height: 20 } })
+      ],
       listeners: {
         move(event) {
-          let { x, y } = event.deltaRect.left || { x:0, y:0 };
-          let w = event.rect.width;
-          let h = event.rect.height;
-          el.style.width = w + 'px';
+          let dx = event.deltaRect.left;
+          let dy = event.deltaRect.top;
+          let w  = event.rect.width;
+          let h  = event.rect.height;
+          let x  = (parseFloat(el.getAttribute('data-x'))||0) + dx;
+          let y  = (parseFloat(el.getAttribute('data-y'))||0) + dy;
+
+          el.style.width  = w + 'px';
           el.style.height = h + 'px';
-          let curX = (parseFloat(el.getAttribute('data-x'))||0) + x;
-          let curY = (parseFloat(el.getAttribute('data-y'))||0) + y;
-          el.style.transform = `translate(${curX}px,${curY}px) rotate(${el.getAttribute('data-rotation')||0}deg)`;
-          el.setAttribute('data-x', curX);
-          el.setAttribute('data-y', curY);
+          el.setAttribute('data-x', x);
+          el.setAttribute('data-y', y);
+          el.style.transform = `translate(${x}px,${y}px) rotate(${el.getAttribute('data-rotation')||0}deg)`;
         }
       }
     });
 
   // selección
   el.addEventListener('click', ev => {
-    document.querySelectorAll('.canvas-element').forEach(x=>x.classList.remove('selected'));
+    document.querySelectorAll('.canvas-element')
+      .forEach(x => x.classList.remove('selected'));
     el.classList.add('selected');
     ev.stopPropagation();
   });
@@ -122,29 +144,43 @@ function makeInteractable(el) {
 
 // deseleccionar clic fuera
 canvas.parentElement.addEventListener('click', () => {
-  document.querySelectorAll('.canvas-element').forEach(x=>x.classList.remove('selected'));
+  document.querySelectorAll('.canvas-element')
+    .forEach(x => x.classList.remove('selected'));
 });
 
 // GENERAR CÓDIGO
 generateCodeBtn.addEventListener('click', () => {
+  // construir contenido...
   let html = canvas.innerHTML;
   let css  = `/* Estilos necesarios */\n${document.querySelector('link[rel=stylesheet]').outerHTML}`;
   let js   = `/* Código interact.js habilitado */\n// …tu script.js…`;
+
   htmlPane.textContent = html;
   cssPane.textContent  = css;
   jsPane.textContent   = js;
+
+  // FORZAR MOSTRAR
   codeModal.classList.remove('hidden');
+  codeModal.style.display = 'flex';
 });
 
-// PESTAÑAS Y CERRAR MODAL
-codeModal.querySelectorAll('.code-tabs button').forEach(btn=>{
-  btn.onclick = () => {
-    codeModal.querySelectorAll('.code-tabs button').forEach(b=>b.classList.remove('active'));
+// CERRAR MODAL (forzando ocultar)
+closeModal.addEventListener('click', () => {
+  codeModal.classList.add('hidden');
+  codeModal.style.display = 'none';
+});
+
+// Cambio de pestañas en el modal
+codeModal.querySelectorAll('.code-tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    codeModal.querySelectorAll('.code-tabs button')
+      .forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    ['htmlPane','cssPane','jsPane'].forEach(id=>{
+
+    ['htmlPane','cssPane','jsPane'].forEach(id => {
       document.getElementById(id).classList.add('hidden');
     });
-    document.getElementById(btn.dataset.tab + 'Pane').classList.remove('hidden');
-  };
+    document.getElementById(btn.dataset.tab + 'Pane')
+      .classList.remove('hidden');
+  });
 });
-closeModal.addEventListener('click', ()=> codeModal.classList.add('hidden'));
